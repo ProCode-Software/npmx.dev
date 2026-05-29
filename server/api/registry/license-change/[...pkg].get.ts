@@ -1,3 +1,5 @@
+import { normalizeLicense } from '~/composables/npm/usePackage'
+
 interface LicenseChangeRecord {
   from: string
   to: string
@@ -42,8 +44,12 @@ export default defineCachedEventHandler(
         version === 'latest' ? versions.length - 1 : versions.findIndex(v => v.version === version)
 
       const previousVersionIndex = currentVersionIndex - 1
-      const currentLicense = String(versions[currentVersionIndex]?.license || 'UNKNOWN')
-      const previousLicense = String(versions[previousVersionIndex]?.license || 'UNKNOWN')
+      const currentLicense = String(
+        normalizeLicense(versions[currentVersionIndex]?.license) || 'UNKNOWN',
+      )
+      const previousLicense = String(
+        normalizeLicense(versions[previousVersionIndex]?.license) || 'UNKNOWN',
+      )
 
       if (currentLicense !== previousLicense) {
         change = {
